@@ -1,6 +1,10 @@
 stages:
   - test
   - publish
+
+variables:
+  GIT_DEPTH: 100
+
 build-and-publish-proxy:
   image:
     entrypoint:
