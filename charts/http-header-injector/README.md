@@ -23,7 +23,7 @@ going through the cluster for pods which have the annotation `http-header-inject
 | certificatePrehook.image.tag | float | `1.27` | The tag for the docker image |
 | proxy | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"stackstate/http-header-injector-proxy","tag":"sha-f6b2c6a6"}}` | Proxy being injected into pods for rewriting http headers |
 | proxy.image.pullPolicy | string | `"IfNotPresent"` | Policy when pulling an image |
-| proxy.image.registry | string | `"quay.io"` | Registry for the docker image |
+| proxy.image.registry | string | `"quay.io"` | Registry for the docker image. |
 | proxy.image.tag | string | `"sha-f6b2c6a6"` | The tag for the docker image |
 | proxyInit | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"stackstate/http-header-injector-proxy-init","tag":"sha-7490da51"}}` | InitContainer within pod which redirects traffic to the proxy container. |
 | proxyInit.image.pullPolicy | string | `"IfNotPresent"` | Policy when pulling an image |

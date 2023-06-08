@@ -1,7 +1,7 @@
 # proxy -- Proxy being injected into pods for rewriting http headers
 proxy:
   image:
-    # proxy.image.registry -- Registry for the docker image
+    # proxy.image.registry -- Registry for the docker image.
     registry: quay.io
     # proxy.image.repository - Repository for the docker image
     repository: "stackstate/http-header-injector-proxy"
