@@ -1,15 +1,14 @@
-
 # proxy -- Proxy being injected into pods for rewriting http headers
 proxy:
   image:
     # proxy.image.registry -- Registry for the docker image
     registry: quay.io
     # proxy.image.repository - Repository for the docker image
-    repository: "bschuursts/http-header-injector-proxy"
+    repository: "stackstate/http-header-injector-proxy"
     # proxy.image.pullPolicy -- Policy when pulling an image
     pullPolicy: IfNotPresent
     # proxy.image.tag -- The tag for the docker image
-    tag: latest
+    tag: sha-f6b2c6a6
 
 # proxyInit -- InitContainer within pod which redirects traffic to the proxy container.
 proxyInit:
@@ -17,11 +16,11 @@ proxyInit:
     # proxyInit.image.registry -- Registry for the docker image
     registry: quay.io
     # proxyInit.image.repository - Repository for the docker image
-    repository: "bschuursts/http-header-injector-proxy-init"
+    repository: "stackstate/http-header-injector-proxy-init"
     # proxyInit.image.pullPolicy -- Policy when pulling an image
     pullPolicy: IfNotPresent
     # proxyInit.image.tag -- The tag for the docker image
-    tag: latest
+    tag: sha-f6b2c6a6
 
 # sidecarInjector -- Service for injecting the proxy sidecar into pods
 sidecarInjector:
