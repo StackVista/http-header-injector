@@ -32,13 +32,13 @@ build-and-publish-proxy-init:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
       changes:
-        - proxy/**/*
+        - proxy-init/**/*
       when: always
     - when: never
   script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"quay.io\":{\"username\":\"${quay_user}\",\"password\":\"${quay_password}\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context "./proxy/"  --dockerfile ./proxy/Dockerfile --destination quay.io/stackstate/http-header-injector-proxy:sha-${CI_COMMIT_SHORT_SHA}
+    - /kaniko/executor --context "./proxy-init/"  --dockerfile ./proxy-init/Dockerfile --destination quay.io/stackstate/http-header-injector-proxy-init:sha-${CI_COMMIT_SHORT_SHA}
   stage: publish
 
 validate-http-header-injector-branch:
