@@ -1,0 +1,8 @@
+chart-dirs:
+  - charts
+chart-repos:
+  - stackstate=https://helm.stackstate.io
+  - stackstate-internal=https://helm-internal.stackstate.io
+helm-extra-args: --debug --kubeconfig ${KUBECONFIG} --timeout 1200
+remote: helm
+target-branch: main

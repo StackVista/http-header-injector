@@ -110,4 +110,3 @@ else
   printUsage
   exit 1
 fi
-

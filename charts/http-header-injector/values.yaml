@@ -1,0 +1,53 @@
+
+# proxy -- Proxy being injected into pods for rewriting http headers
+proxy:
+  image:
+    # proxy.image.registry -- Registry for the docker image
+    registry: quay.io
+    # proxy.image.repository - Repository for the docker image
+    repository: "bschuursts/http-header-injector-proxy"
+    # proxy.image.pullPolicy -- Policy when pulling an image
+    pullPolicy: IfNotPresent
+    # proxy.image.tag -- The tag for the docker image
+    tag: latest
+
+# proxyInit -- InitContainer within pod which redirects traffic to the proxy container.
+proxyInit:
+  image:
+    # proxyInit.image.registry -- Registry for the docker image
+    registry: quay.io
+    # proxyInit.image.repository - Repository for the docker image
+    repository: "bschuursts/http-header-injector-proxy-init"
+    # proxyInit.image.pullPolicy -- Policy when pulling an image
+    pullPolicy: IfNotPresent
+    # proxyInit.image.tag -- The tag for the docker image
+    tag: latest
+
+# sidecarInjector -- Service for injecting the proxy sidecar into pods
+sidecarInjector:
+  image:
+    # sidecarInjector.image.registry -- Registry for the docker image.
+    registry: quay.io
+    # sidecarInjector.image.repository - Repository for the docker image
+    repository: "bschuursts/generic-sidecar-injector"
+    # sidecarInjector.image.pullPolicy -- Policy when pulling an image
+    pullPolicy: IfNotPresent
+    # sidecarInjector.image.tag -- The tag for the docker image
+    tag: latest
+
+# certificatePrehook -- Helm prehook to setup/remove a certificate for the sidecarInjector mutationwebhook
+certificatePrehook:
+  image:
+    # certificatePrehook.image.registry -- Registry for the docker image.
+    registry: docker.io
+    # certificatePrehook.image.repository - Repository for the docker image
+    repository: "bitname/kubectl"
+    # certificatePrehook.image.pullPolicy -- Policy when pulling an image
+    pullPolicy: IfNotPresent
+    # certificatePrehook.image.tag -- The tag for the docker image
+    tag: 1.27
+
+# webhook -- MutationWebhook that will be installed to inject a sidecar into pods
+webhook:
+  # webhook.failurePolicy -- How should the webhook fail? Best is to use Ignore, because there is a brief moment at initialization when the hook s there but the service not. Also, putting this to fail can cause the control plane be unresponsive.
+  failurePolicy: Ignore

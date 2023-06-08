@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: "{{ include "http-header-injector.app.name" . }}"
+  name: "{{ include "http-header-injector.app.name" . }}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ include "http-header-injector.app.name" . }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ include "http-header-injector.app.name" . }}"
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/webhook-config.yaml") . | sha256sum }}
+      name: "{{ include "http-header-injector.app.name" . }}"
+    spec:
+      volumes:
+        - name: "{{ include "http-header-injector.webhook-config.name" . }}"
+          configMap:
+            name: "{{ include "http-header-injector.webhook-config.name" . }}"
+        - name: "{{ include "http-header-injector.cert-secret.name" . }}"
+          secret:
+            secretName: "{{ include "http-header-injector.cert-secret.name" . }}"
+      containers:
+        - image: "{{ .Values.sidecarInjector.image.registry }}/{{ .Values.sidecarInjector.image.repository }}:{{ .Values.sidecarInjector.image.tag }}"
+          imagePullPolicy: {{ .Values.sidecarInjector.image.pullPolicy }}
+          name: http-header-injector
+          volumeMounts:
+            - name: "{{ include "http-header-injector.webhook-config.name" . }}"
+              mountPath: /etc/webhook/config
+              readOnly: true
+            - name: "{{ include "http-header-injector.cert-secret.name" . }}"
+              mountPath: /etc/webhook/certs
+              readOnly: true
+          command: [ "/sidecarinjector" ]
+          args:
+            - --port=8443
+            - --sidecar-config-file=/etc/webhook/config/sidecarconfig.yaml
+            - --mutation-config-file=/etc/webhook/config/mutationconfig.yaml
+            - --cert-file-path=/etc/webhook/certs/tls.crt
+            - --key-file-path=/etc/webhook/certs/tls.key

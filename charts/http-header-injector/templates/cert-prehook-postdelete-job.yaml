@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-header-injector-cert-delete
+  annotations:
+    "helm.sh/hook": post-delete
+    "helm.sh/hook-weight": "-2"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/cert-prehook-config.yaml") . | sha256sum }}
+    spec:
+      serviceAccountName: "{{ include "http-header-injector.cert-serviceaccount.name" . }}"
+      volumes:
+        - name: "{{ include "http-header-injector.cert-config.name" . }}"
+          configMap:
+            name: "{{ include "http-header-injector.cert-config.name" . }}"
+            defaultMode: 0777
+      containers:
+        - name: webhook-cert-delete
+          image: "{{ .Values.certificatePrehook.image.registry }}/{{ .Values.certificatePrehook.image.repository }}:{{ .Values.certificatePrehook.image.tag }}"
+          imagePullPolicy: {{ .Values.certificatePrehook.image.pullPolicy }}
+          volumeMounts:
+            - name: "{{ include "http-header-injector.cert-config.name" . }}"
+              mountPath: /scripts
+          command: [ "/scripts/delete-cert.sh" ]
+      restartPolicy: Never
+  backoffLimit: 0
