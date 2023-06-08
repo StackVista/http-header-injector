@@ -28,11 +28,11 @@ sidecarInjector:
     # sidecarInjector.image.registry -- Registry for the docker image.
     registry: quay.io
     # sidecarInjector.image.repository - Repository for the docker image
-    repository: "bschuursts/generic-sidecar-injector"
+    repository: "stackstate/generic-sidecar-injector"
     # sidecarInjector.image.pullPolicy -- Policy when pulling an image
     pullPolicy: IfNotPresent
     # sidecarInjector.image.tag -- The tag for the docker image
-    tag: latest
+    tag: sha-2335f2d1
 
 # certificatePrehook -- Helm prehook to setup/remove a certificate for the sidecarInjector mutationwebhook
 certificatePrehook:

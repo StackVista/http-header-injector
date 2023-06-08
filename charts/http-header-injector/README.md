@@ -29,10 +29,10 @@ going through the cluster for pods which have the annotation `http-header-inject
 | proxyInit.image.pullPolicy | string | `"IfNotPresent"` | Policy when pulling an image |
 | proxyInit.image.registry | string | `"quay.io"` | Registry for the docker image |
 | proxyInit.image.tag | string | `"sha-f6b2c6a6"` | The tag for the docker image |
-| sidecarInjector | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"bschuursts/generic-sidecar-injector","tag":"latest"}}` | Service for injecting the proxy sidecar into pods |
+| sidecarInjector | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"stackstate/generic-sidecar-injector","tag":"sha-2335f2d1"}}` | Service for injecting the proxy sidecar into pods |
 | sidecarInjector.image.pullPolicy | string | `"IfNotPresent"` | Policy when pulling an image |
 | sidecarInjector.image.registry | string | `"quay.io"` | Registry for the docker image. |
-| sidecarInjector.image.tag | string | `"latest"` | The tag for the docker image |
+| sidecarInjector.image.tag | string | `"sha-2335f2d1"` | The tag for the docker image |
 | webhook | object | `{"failurePolicy":"Ignore"}` | MutationWebhook that will be installed to inject a sidecar into pods |
 | webhook.failurePolicy | string | `"Ignore"` | How should the webhook fail? Best is to use Ignore, because there is a brief moment at initialization when the hook s there but the service not. Also, putting this to fail can cause the control plane be unresponsive. |
 
