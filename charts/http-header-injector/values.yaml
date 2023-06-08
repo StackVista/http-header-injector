@@ -39,7 +39,7 @@ certificatePrehook:
   image:
     # certificatePrehook.image.registry -- Registry for the docker image.
     registry: docker.io
-    # certificatePrehook.image.repository - Repository for the docker image
+    # certificatePrehook.image.repository - Repository for the docker image.
     repository: "bitname/kubectl"
     # certificatePrehook.image.pullPolicy -- Policy when pulling an image
     pullPolicy: IfNotPresent

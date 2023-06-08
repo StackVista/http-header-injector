@@ -11,12 +11,10 @@ build-and-publish-proxy:
   # which contains secrets for example does not outweigh the convenience.
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - proxy-init/**/*
       when: always
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: never
-    - when: always # TODO set to never
+    - when: never
   script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"quay.io\":{\"username\":\"${quay_user}\",\"password\":\"${quay_password}\"}}}" > /kaniko/.docker/config.json
@@ -33,12 +31,10 @@ build-and-publish-proxy-init:
   # which contains secrets for example does not outweigh the convenience.
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - proxy/**/*
       when: always
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: never
-    - when: always # TODO set to never
+    - when: never
   script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"quay.io\":{\"username\":\"${quay_user}\",\"password\":\"${quay_password}\"}}}" > /kaniko/.docker/config.json
@@ -52,9 +48,10 @@ validate-http-header-injector-branch:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
       when: never
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: never
-    - when: always
+    - changes:
+        - charts/http-header-injector/**/*
+      when: always
+    - when: never
   script:
     - ct lint --debug --validate-maintainers=false --check-version-increment=true --config ct.yaml
     - helm template charts/http-header-injector | kubeconform  -
@@ -67,11 +64,12 @@ publish-http-header-injector-branch:
       when: never
     - if: $CI_COMMIT_TAG
       when: never
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: never
-    - when: always
+    - changes:
+        - charts/http-header-injector/**/*
+      when: always
+    - when: never
   script:
-    - helm cm-push --username ${CHARTMUSEUM_INTERNAL_USERNAME} --password ${CHARTMUSEUM_INTERNAL_PASSWORD} charts/http-header-injector ${CHARTMUSEUM_INTERNAL_URL}
+    - helm cm-push --force --username ${CHARTMUSEUM_INTERNAL_USERNAME} --password ${CHARTMUSEUM_INTERNAL_PASSWORD} charts/http-header-injector ${CHARTMUSEUM_INTERNAL_URL}
   stage: publish
   variables:
     CHART: charts/http-header-injector
@@ -80,6 +78,8 @@ publish-http-header-injector:
   image: ${DOCKER_PROXY_URL}/stackstate/sts-ci-images:stackstate-devops-0ccefe18
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - charts/http-header-injector/**/*
       when: always
     - when: never
   script:
