@@ -10,6 +10,8 @@ data:
   generate-cert.sh: |
     #!/bin/bash
 
+    # We are going for a self-signed certificate here. We would like to use k8s CertificateSigningRequest, however,
+    # currently there are no out of the box signers that can sign a 'server auth' certificate, which is required for mutation webhooks.
     set -ex
 
     SCRIPTDIR="${BASH_SOURCE%/*}"
