@@ -52,7 +52,7 @@ validate-http-header-injector-branch:
       when: always
     - when: never
   script:
-    - ct list-changed --config test/ct.yaml
+    - ct list-changed --config ct.yaml
     - ct lint --debug --validate-maintainers=false --config ct.yaml
     - helm template charts/http-header-injector | kubeconform  -
   stage: test
