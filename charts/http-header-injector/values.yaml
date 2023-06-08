@@ -20,7 +20,7 @@ proxyInit:
     # proxyInit.image.pullPolicy -- Policy when pulling an image
     pullPolicy: IfNotPresent
     # proxyInit.image.tag -- The tag for the docker image
-    tag: sha-f6b2c6a6
+    tag: sha-7490da51
 
 # sidecarInjector -- Service for injecting the proxy sidecar into pods
 sidecarInjector:
