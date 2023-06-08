@@ -17,7 +17,7 @@ going through the cluster for pods which have the annotation `http-header-inject
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| certificatePrehook | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"bitname/kubectl","tag":1.27}}` | Helm prehook to setup/remove a certificate for the sidecarInjector mutationwebhook |
+| certificatePrehook | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"bitnami/kubectl","tag":1.27}}` | Helm prehook to setup/remove a certificate for the sidecarInjector mutationwebhook |
 | certificatePrehook.image.pullPolicy | string | `"IfNotPresent"` | Policy when pulling an image |
 | certificatePrehook.image.registry | string | `"docker.io"` | Registry for the docker image. |
 | certificatePrehook.image.tag | float | `1.27` | The tag for the docker image |
