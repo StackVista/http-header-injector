@@ -3,6 +3,7 @@ stages:
   - publish
 
 variables:
+  # Required for helm change detection
   GIT_DEPTH: 100
 
 build-and-publish-proxy:
