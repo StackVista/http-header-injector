@@ -10,6 +10,8 @@ data:
         imagePullPolicy: {{ .Values.proxyInit.image.pullPolicy }}
         command: ["/init-iptables.sh"]
         env:
+          - name: CHART_VERSION
+            value: "{{ .Chart.Version }}"
           - name: PROXY_PORT
             value: {% if index .Annotations "config.http-header-injector.stackstate.io/proxy-port" %}"{% index .Annotations "config.http-header-injector.stackstate.io/proxy-port" %}"{% else %}"7060"{% end %}
           - name: PROXY_UID
@@ -48,6 +50,8 @@ data:
         image: "{{ .Values.proxy.image.registry }}/{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"
         imagePullPolicy: {{ .Values.proxy.image.pullPolicy }}
         env:
+          - name: CHART_VERSION
+            value: "{{ .Chart.Version }}"
           - name: PORT
             value: {% if index .Annotations "config.http-header-injector.stackstate.io/proxy-port" %}"{% index .Annotations "config.http-header-injector.stackstate.io/proxy-port" %}"{% else %}"7060"{% end %}
         securityContext:
