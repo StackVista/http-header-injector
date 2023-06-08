@@ -6,12 +6,17 @@ build-and-publish-proxy:
     entrypoint:
       - ""
     name: gcr.io/kaniko-project/executor:debug
-#  only:
-#    refs:
-#      # We only enable publishing to the public repo on master, to avoid unwanted version of branches to end up there
-#      # Theoretically we could publish branches there aswell, but I feel the risk of accidentally publishing something
-#      # which contains secrets for example does not outweigh the convenience.
-#      - main
+  # We only enable publishing to the public repo on master, to avoid unwanted version of branches to end up there
+  # Theoretically we could publish branches there aswell, but I feel the risk of accidentally publishing something
+  # which contains secrets for example does not outweigh the convenience.
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: always
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - when: always # TODO set to never
   script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"quay.io\":{\"username\":\"${quay_user}\",\"password\":\"${quay_password}\"}}}" > /kaniko/.docker/config.json
@@ -23,12 +28,17 @@ build-and-publish-proxy-init:
     entrypoint:
       - ""
     name: gcr.io/kaniko-project/executor:debug
-#  only:
-#    refs:
-#      # We only enable publishing to the public repo on master, to avoid unwanted version of branches to end up there
-#      # Theoretically we could publish branches there aswell, but I feel the risk of accidentally publishing something
-#      # which contains secrets for example does not outweigh the convenience.
-#      - main
+  # We only enable publishing to the public repo on master, to avoid unwanted version of branches to end up there
+  # Theoretically we could publish branches there aswell, but I feel the risk of accidentally publishing something
+  # which contains secrets for example does not outweigh the convenience.
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: always
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
+    - when: always # TODO set to never
   script:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"quay.io\":{\"username\":\"${quay_user}\",\"password\":\"${quay_password}\"}}}" > /kaniko/.docker/config.json
@@ -42,6 +52,8 @@ validate-http-header-injector-branch:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
       when: never
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
     - when: always
   script:
     - ct lint --debug --validate-maintainers=false --check-version-increment=true --config ct.yaml
@@ -54,6 +66,8 @@ publish-http-header-injector-branch:
     - if: $CI_COMMIT_BRANCH == "main"
       when: never
     - if: $CI_COMMIT_TAG
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: never
     - when: always
   script:
