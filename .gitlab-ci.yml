@@ -46,7 +46,11 @@ validate-http-header-injector-branch:
   before_script:
     - .gitlab/validate_before_script.sh
   rules:
+    - - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+        when: never
     - if: $CI_COMMIT_BRANCH == "main"
+      when: never
+    - if: $CI_COMMIT_TAG
       when: never
     - changes:
         - charts/http-header-injector/**/*
@@ -60,6 +64,8 @@ validate-http-header-injector-branch:
 publish-http-header-injector-branch:
   image: ${DOCKER_PROXY_URL}/stackstate/sts-ci-images:stackstate-devops-0ccefe18
   rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: never
     - if: $CI_COMMIT_BRANCH == "main"
       when: never
     - if: $CI_COMMIT_TAG
