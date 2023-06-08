@@ -13,8 +13,7 @@ installDependencies() {
 installGitRemotes() {
   # shellcheck disable=SC2154
   git remote add helm "https://oauth2:${gitlab_api_scope_token}@gitlab.com/stackvista/agent/http-header-injector" || true
-  sleep 20
-  git fetch helm
+  git fetch --depth 100 helm
 }
 
 installDependencies
