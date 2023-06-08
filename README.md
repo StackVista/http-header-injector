@@ -17,3 +17,10 @@ TODO: We might unit/it test this using the just framework used by linkerd: https
 
 - The `./charts/http-header-injector` can be install using helm `helm upgrade --install --namespace http-header-injector --create-namespace http-header-injector ./charts/http-header-injector`
 - The `./examples/install.sh` can be used to install/uninstall the various examples
+
+# Releasing
+
+The docker images under `./proxy` and `./proxy-init` will be built on the `main` branch when there are changes, and will be tagged with
+the git hash.
+
+The helm chart is using semver and should be bumped every time the chart is changed. Builds are ran when there are changes.
