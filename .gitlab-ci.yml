@@ -30,7 +30,7 @@ build-and-publish-proxy-init:
   # Theoretically we could publish branches there aswell, but I feel the risk of accidentally publishing something
   # which contains secrets for example does not outweigh the convenience.
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - # if: $CI_COMMIT_BRANCH == "main"
       changes:
         - proxy-init/**/*
       when: always
