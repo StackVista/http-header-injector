@@ -54,6 +54,8 @@ data:
             value: "{{ .Chart.Version }}"
           - name: PORT
             value: {% if index .Annotations "config.http-header-injector.stackstate.io/proxy-port" %}"{% index .Annotations "config.http-header-injector.stackstate.io/proxy-port" %}"{% else %}"7060"{% end %}
+          - name: DEBUG
+            value: {% if index .Annotations "config.http-header-injector.stackstate.io/debug" %}"{% index .Annotations "config.http-header-injector.stackstate.io/debug" %}"{% else %}"disabled"{% end %}
         securityContext:
           runAsUser: {% if index .Annotations "config.http-header-injector.stackstate.io/proxy-uid" %}{% index .Annotations "config.http-header-injector.stackstate.io/proxy-uid" %}{% else %}2103{% end %}
           seccompProfile:

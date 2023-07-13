@@ -37,20 +37,20 @@ static_resources:
                   - name: envoy.filters.http.router
                     typed_config:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
-                access_log:
-                  - name: envoy.access_loggers.file
-                    typed_config:
-                      "@type": type.googleapis.com/envoy.extensions.access_loggers.file.v3.FileAccessLog
-                      path: "/dev/stdout"
-                      typed_json_format:
-                        "@timestamp": "%START_TIME%"
-                        # Traffic class, this will tell whether traffic was classified as http or tcp
-                        proxy.traffic.class: "http"
-                        client.local.address: "%DOWNSTREAM_LOCAL_ADDRESS%"
-                        upstream.remote.address: "%UPSTREAM_REMOTE_ADDRESS%"
-                        http.request.headers.id: "%REQ(X-REQUEST-ID)%"
-                        http.response.code: "%RESPONSE_CODE%"
-                        http.response.headers.id: "%RESP(X-REQUEST-ID)%"
+#LOG                access_log:
+#LOG                  - name: envoy.access_loggers.file
+#LOG                    typed_config:
+#LOG                      "@type": type.googleapis.com/envoy.extensions.access_loggers.file.v3.FileAccessLog
+#LOG                      path: "/dev/stdout"
+#LOG                      typed_json_format:
+#LOG                        "@timestamp": "%START_TIME%"
+#LOG                        # Traffic class, this will tell whether traffic was classified as http or tcp
+#LOG                        proxy.traffic.class: "http"
+#LOG                        client.local.address: "%DOWNSTREAM_LOCAL_ADDRESS%"
+#LOG                        upstream.remote.address: "%UPSTREAM_REMOTE_ADDRESS%"
+#LOG                        http.request.headers.id: "%REQ(X-REQUEST-ID)%"
+#LOG                        http.response.code: "%RESPONSE_CODE%"
+#LOG                        http.response.headers.id: "%RESP(X-REQUEST-ID)%"
           filterChainMatch:
             applicationProtocols:
               - http/1.0
@@ -62,17 +62,17 @@ static_resources:
                 "@type": type.googleapis.com/envoy.extensions.filters.network.tcp_proxy.v3.TcpProxy
                 stat_prefix: tcp
                 cluster: original_destination_cluster
-                access_log:
-                  - name: envoy.access_loggers.file
-                    typed_config:
-                      "@type": type.googleapis.com/envoy.extensions.access_loggers.file.v3.FileAccessLog
-                      path: "/dev/stdout"
-                      typed_json_format:
-                        "@timestamp": "%START_TIME%"
-                        # Traffic class, this will tell whether traffic was classified as http or tcp
-                        proxy.traffic.class: "tcp"
-                        client.local.address: "%DOWNSTREAM_LOCAL_ADDRESS%"
-                        upstream.remote.address: "%UPSTREAM_REMOTE_ADDRESS%"
+#LOG                access_log:
+#LOG                  - name: envoy.access_loggers.file
+#LOG                    typed_config:
+#LOG                      "@type": type.googleapis.com/envoy.extensions.access_loggers.file.v3.FileAccessLog
+#LOG                      path: "/dev/stdout"
+#LOG                      typed_json_format:
+#LOG                        "@timestamp": "%START_TIME%"
+#LOG                        # Traffic class, this will tell whether traffic was classified as http or tcp
+#LOG                        proxy.traffic.class: "tcp"
+#LOG                        client.local.address: "%DOWNSTREAM_LOCAL_ADDRESS%"
+#LOG                        upstream.remote.address: "%UPSTREAM_REMOTE_ADDRESS%"
       listener_filters:
         - name: envoy.filters.listener.original_dst
           typed_config:
