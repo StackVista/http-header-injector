@@ -12,7 +12,6 @@ spec:
   template:
     metadata:
       annotations:
-        linkerd.io/inject: enabled
         http-header-injector.stackstate.io/inject: enabled
       labels:
         app: http-server
@@ -45,7 +44,6 @@ spec:
         - name: http-server-mockserver-config
           configMap:
             name: http-server-mockserver-config
----
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -108,7 +106,6 @@ data:
         }
       }
     ]
-
 ---
 apiVersion: v1
 kind: Service
@@ -136,7 +133,6 @@ spec:
   template:
     metadata:
       annotations:
-        linkerd.io/inject: enabled
         http-header-injector.stackstate.io/inject: enabled
       labels:
         app: http-client
@@ -152,7 +148,7 @@ spec:
         #          name: http-client
         - name: http-client-success-traffic
           image: tolleiv/rakyll-hey:v0.1.4
-          args: [ "-z", "12h", "-c", "5", "-q", "2", "http://http-server:5678/bigSuccess" ]
+          args: [ "-z", "12h", "-c", "5", "-q", "2", "http://<fillmein>/success" ]
 #        - image: curlimages/curl
 #          name: curl
 #          command: ["/bin/sh", "-c", "while echo \"Running\"; do sleep 1; done"]
@@ -162,4 +158,32 @@ spec:
 #            - "/bin/sh"
 #            - "-c"
 #            - "tcpdump -i eth0 -A"
-
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ngrok-server
+  name: ngrok-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ngrok-server
+  template:
+    metadata:
+      labels:
+        app: ngrok-server
+      name: ngrok-server
+    spec:
+      containers:
+        - name: ngrok
+          image: ngrok/ngrok:latest
+          env:
+            - name: NGROK_AUTHTOKEN
+              value: "<auth_token>"
+          args:
+            - "http"
+            - "--scheme=http"
+            - "http-server:5678"
+---
