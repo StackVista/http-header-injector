@@ -1,3 +1,9 @@
+# enabled -- Enable/disable the mutationwebhook
+enabled: true
+
+# debug -- Enable debugging. This will leave leave artifacts around like the prehook jobs for further inspection
+debug: false
+
 # proxy -- Proxy being injected into pods for rewriting http headers
 proxy:
   image:

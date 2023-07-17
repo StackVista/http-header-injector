@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: "{{ include "http-header-injector.cert-config.name" . }}"
   annotations:
-    "helm.sh/hook": pre-install,post-delete
+    "helm.sh/hook": pre-install,pre-upgrade,post-delete,post-upgrade
     "helm.sh/hook-weight": "-3"
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 data:
@@ -19,6 +19,13 @@ data:
     DIR=`mktemp -d`
 
     cd "$DIR"
+
+    if  [[ "{{ .Values.enabled }}" = "true" ]]; then
+      echo "Chart enabled, creating secret and webhook"
+    else
+      echo "Chart disabled, not creating secret and webhook"
+      exit 0
+    fi
 
     openssl genrsa -out ca.key 2048
 
@@ -48,11 +55,21 @@ data:
   delete-cert.sh: |
     #!/bin/bash
 
+    set -x
+
     DIR="${BASH_SOURCE%/*}"
     if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
     if [[ "$DIR" = "." ]]; then DIR="$PWD"; fi
 
     cd "$DIR"
+
+    # Using detection of deployment hee to also make this work in post-delete.
+    if kubectl get deployments "{{ include "http-header-injector.app.name" . }}"  -n "{{ .Release.Namespace }}"; then
+      echo "Chart enabled, not removing secret and mutationwebhook"
+      exit 0
+    else
+      echo "Chart disabled, removing secret and mutationwebhook"
+    fi
 
     # Create or update the secret
     echo "Deleting secret"
@@ -60,6 +77,8 @@ data:
 
     echo "Applying mutationwebhook"
     kubectl delete MutatingWebhookConfiguration "{{ include "http-header-injector.mutating-webhook.name" . }}" -n "{{ .Release.Namespace }}"
+
+    exit 0
 
   csr.conf: |
     [ req ]

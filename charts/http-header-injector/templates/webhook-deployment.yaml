@@ -1,3 +1,4 @@
+{{- if .Values.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,6 +16,8 @@ spec:
         app: "{{ include "http-header-injector.app.name" . }}"
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/webhook-config.yaml") . | sha256sum }}
+        # This is here to make sure the generic injector gets restarted and picks up a new secret that may have been generated upon upgrade.
+        revision: "{{ .Release.Revision }}"
       name: "{{ include "http-header-injector.app.name" . }}"
     spec:
       volumes:
@@ -42,3 +45,4 @@ spec:
             - --mutation-config-file=/etc/webhook/config/mutationconfig.yaml
             - --cert-file-path=/etc/webhook/certs/tls.crt
             - --key-file-path=/etc/webhook/certs/tls.key
+{{- end -}}

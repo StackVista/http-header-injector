@@ -21,6 +21,8 @@ going through the cluster for pods which have the annotation `http-header-inject
 | certificatePrehook.image.pullPolicy | string | `"IfNotPresent"` | Policy when pulling an image |
 | certificatePrehook.image.registry | string | `"docker.io"` | Registry for the docker image. |
 | certificatePrehook.image.tag | float | `1.27` | The tag for the docker image |
+| debug | bool | `false` | Enable debugging. This will leave leave artifacts around like the prehook jobs for further inspection |
+| enabled | bool | `true` | Enable/disable the mutationwebhook |
 | proxy | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"stackstate/http-header-injector-proxy","tag":"sha-f6b2c6a6"}}` | Proxy being injected into pods for rewriting http headers |
 | proxy.image.pullPolicy | string | `"IfNotPresent"` | Policy when pulling an image |
 | proxy.image.registry | string | `"quay.io"` | Registry for the docker image. |

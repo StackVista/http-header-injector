@@ -3,7 +3,7 @@ kind: ClusterRole
 metadata:
   name: "{{ include "http-header-injector.cert-clusterrole.name" . }}"
   annotations:
-    "helm.sh/hook": pre-install,post-delete
+    "helm.sh/hook": pre-install,pre-upgrade,post-delete,post-upgrade
     "helm.sh/hook-weight": "-4"
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 rules:
@@ -13,3 +13,6 @@ rules:
   - apiGroups: [ "" ]
     resources: [ "secrets" ]
     verbs: [ "create", "get", "patch","update","delete" ]
+  - apiGroups: [ "apps" ]
+    resources: [ "deployments" ]
+    verbs: [ "get" ]
