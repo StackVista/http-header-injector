@@ -17,10 +17,10 @@ going through the cluster for pods which have the annotation `http-header-inject
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| certificatePrehook | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"docker.io","repository":"bitnami/kubectl","tag":1.27}}` | Helm prehook to setup/remove a certificate for the sidecarInjector mutationwebhook |
+| certificatePrehook | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"stackstate/container-tools","tag":"1.1.8"}}` | Helm prehook to setup/remove a certificate for the sidecarInjector mutationwebhook |
 | certificatePrehook.image.pullPolicy | string | `"IfNotPresent"` | Policy when pulling an image |
-| certificatePrehook.image.registry | string | `"docker.io"` | Registry for the docker image. |
-| certificatePrehook.image.tag | float | `1.27` | The tag for the docker image |
+| certificatePrehook.image.registry | string | `"quay.io"` | Registry for the docker image. |
+| certificatePrehook.image.tag | string | `"1.1.8"` | The tag for the docker image |
 | debug | bool | `false` | Enable debugging. This will leave leave artifacts around like the prehook jobs for further inspection |
 | enabled | bool | `true` | Enable/disable the mutationwebhook |
 | proxy | object | `{"image":{"pullPolicy":"IfNotPresent","registry":"quay.io","repository":"stackstate/http-header-injector-proxy","tag":"sha-f6b2c6a6"}}` | Proxy being injected into pods for rewriting http headers |
