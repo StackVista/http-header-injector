@@ -16,6 +16,15 @@ proxy:
     # proxy.image.tag -- The tag for the docker image
     tag: sha-f6b2c6a6
 
+  # proxy.resource -- Resources for the proxy container
+  resources:
+    requests:
+      # proxy.resources.requests.memory -- Memory resource requests.
+      memory: "25Mi"
+    limits:
+      # proxy.resources.limits.memory -- Memory resource limits.
+      memory: "40Mi"
+
 # proxyInit -- InitContainer within pod which redirects traffic to the proxy container.
 proxyInit:
   image:

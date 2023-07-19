@@ -61,6 +61,10 @@ data:
           runAsUser: {% if index .Annotations "config.http-header-injector.stackstate.io/proxy-uid" %}{% index .Annotations "config.http-header-injector.stackstate.io/proxy-uid" %}{% else %}2103{% end %}
           seccompProfile:
             type: RuntimeDefault
+        {{- with .Values.proxy.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
       - name: http-header-inject-debug
         image: "{{ .Values.proxyInit.image.registry }}/{{ .Values.proxyInit.image.repository }}:{{ .Values.proxyInit.image.tag }}"
         imagePullPolicy: {{ .Values.proxyInit.image.pullPolicy }}
