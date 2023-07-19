@@ -19,6 +19,7 @@ spec:
       name: http-server
     spec:
       containers:
+        # Alternative http server
         #        - args:
         #            - -text=apple
         #          image: hashicorp/http-echo
@@ -35,6 +36,7 @@ spec:
           volumeMounts:
             - name: http-server-mockserver-config
               mountPath: /config
+      # Helper for debugging
       #        - name: tcpdumper
       #          image: docker.io/dockersec/tcpdump
       #          command:
@@ -143,6 +145,7 @@ spec:
       name: http-client
     spec:
       containers:
+        # Alternative client
         #        - env:
         #            - name: URL
         #              value: http://http-server:5678/index.html
@@ -153,6 +156,7 @@ spec:
         - name: http-client-success-traffic
           image: tolleiv/rakyll-hey:v0.1.4
           args: [ "-z", "12h", "-c", "5", "-q", "2", "http://http-server:5678/bigSuccess" ]
+# Debugging containers
 #        - image: curlimages/curl
 #          name: curl
 #          command: ["/bin/sh", "-c", "while echo \"Running\"; do sleep 1; done"]

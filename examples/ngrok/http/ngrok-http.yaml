@@ -139,6 +139,7 @@ spec:
       name: http-client
     spec:
       containers:
+        # Alternative client
         #        - env:
         #            - name: URL
         #              value: http://http-server:5678/index.html
@@ -149,6 +150,7 @@ spec:
         - name: http-client-success-traffic
           image: tolleiv/rakyll-hey:v0.1.4
           args: [ "-z", "12h", "-c", "5", "-q", "2", "http://<fillmein>/success" ]
+# Containers for debugging
 #        - image: curlimages/curl
 #          name: curl
 #          command: ["/bin/sh", "-c", "while echo \"Running\"; do sleep 1; done"]

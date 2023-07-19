@@ -10,7 +10,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/cert-prehook-config.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/cert-hook-config.yaml") . | sha256sum }}
     spec:
       serviceAccountName: "{{ include "http-header-injector.cert-serviceaccount.name" . }}"
       volumes:

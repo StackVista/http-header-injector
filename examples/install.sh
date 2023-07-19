@@ -10,9 +10,9 @@ BASEPATH="$DIR"
 function printUsage() {
   cat << USAGE
 
-Usage: ./install_deployment.sh [-n <namespace>] --setup|--destroy|--list|--help [deployment]
+Usage: ./install.sh [-n <namespace>] --setup|--destroy|--list|--help [deployment]
 
-This script takes all deployments from test/scala/com/stackstate/stackpack/kubernetes/monitors and allows easy install and uninstall of those monitors. Options:
+This script takes all deployments from this example directory and allows easy install and uninstall of those examples. Options:
   -n/--namespace -- Override the default namespace (which is the deployment name)
   -s/--setup     -- Setup the provided deployment
   -d/--destroy   -- Destroy the provided deployment
@@ -60,7 +60,8 @@ done
 DEPLOYMENTPATH=""
 
 function resolveDeploymentPathAndNamespace() {
-  matchesCount=$(find "$BASEPATH" -name "$DEPLOYMENT.yaml" | wc -l)
+  # xargs removes spurious whitespace. WHAT?!
+  matchesCount=$(find "$BASEPATH" -name "$DEPLOYMENT.yaml" | wc -l | xargs)
 
   if [[ "$matchesCount" = "0" ]]; then
     echo "Deployment $DEPLOYMENT could not be found"
