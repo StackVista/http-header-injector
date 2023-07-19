@@ -20,12 +20,8 @@ data:
 
     cd "$DIR"
 
-    if  [[ "{{ .Values.enabled }}" = "true" ]]; then
-      echo "Chart enabled, creating secret and webhook"
-    else
-      echo "Chart disabled, not creating secret and webhook"
-      exit 0
-    fi
+    {{ if .Values.enabled }}
+    echo "Chart enabled, creating secret and webhook"
 
     openssl genrsa -out ca.key 2048
 
@@ -51,6 +47,9 @@ data:
     echo "Applying mutationwebhook"
     caBundle=`base64 -w 0 ca.crt`
     cat "$SCRIPTDIR/mutatingwebhookconfiguration.yaml" | sed "s/\\\$CA_BUNDLE/$caBundle/g" | kubectl apply -f -
+    {{ else }}
+    echo "Chart disabled, not creating secret and webhook"
+    {{ end }}
 
   delete-cert.sh: |
     #!/bin/bash
