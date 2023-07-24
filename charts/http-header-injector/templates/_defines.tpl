@@ -37,3 +37,37 @@
 {{- define "http-header-injector.mutating-webhook.name" -}}
 {{ .Release.Name }}-http-header-injector-webhook
 {{- end -}}
+
+{{- define "http-header-injector.pull-secret.name" -}}
+{{ .Release.Name }}-pull-secret
+{{- end -}}
+
+{{- define "http-header-injector.image.registry.global" -}}
+  {{- if .Values.global }}
+    {{- .Values.global.imageRegistry | default "quay.io" -}}
+  {{- else -}}
+    quay.io
+  {{- end -}}
+{{- end -}}
+
+{{- define "http-header-injector.image.registry" -}}
+  {{- if ((.ContainerConfig).image).registry -}}
+    {{- tpl .ContainerConfig.image.registry . -}}
+  {{- else -}}
+    {{- include "http-header-injector.image.registry.global" . }}
+  {{- end -}}
+{{- end -}}
+
+{{- define "http-header-injector.image.pullSecrets" -}}
+  {{- $pullSecrets := list }}
+  {{- $pullSecrets = append $pullSecrets (include "http-header-injector.pull-secret.name" .) }}
+  {{- range .Values.global.imagePullSecrets -}}
+    {{- $pullSecrets = append $pullSecrets .  -}}
+  {{- end -}}
+  {{- if (not (empty $pullSecrets)) -}}
+imagePullSecrets:
+    {{- range $pullSecrets | uniq }}
+  - name: {{ . }}
+    {{- end }}
+  {{- end -}}
+{{- end -}}

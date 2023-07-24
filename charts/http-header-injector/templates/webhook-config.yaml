@@ -1,4 +1,6 @@
 {{- if .Values.enabled -}}
+{{- $proxyContainerConfig := dict "ContainerConfig" .Values.proxy -}}
+{{- $proxyInitContainerConfig := dict "ContainerConfig" .Values.proxyInit -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,7 +9,7 @@ data:
   sidecarconfig.yaml: |
     initContainers:
       - name: http-header-proxy-init
-        image: "{{ .Values.proxyInit.image.registry }}/{{ .Values.proxyInit.image.repository }}:{{ .Values.proxyInit.image.tag }}"
+        image: "{{ include "http-header-injector.image.registry" (merge $proxyInitContainerConfig .) }}/{{ .Values.proxyInit.image.repository }}:{{ .Values.proxyInit.image.tag }}"
         imagePullPolicy: {{ .Values.proxyInit.image.pullPolicy }}
         command: ["/init-iptables.sh"]
         env:
@@ -48,7 +50,7 @@ data:
 
     containers:
       - name: http-header-proxy
-        image: "{{ .Values.proxy.image.registry }}/{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"
+        image: "{{ include "http-header-injector.image.registry" (merge $proxyContainerConfig .) }}/{{ .Values.proxy.image.repository }}:{{ .Values.proxy.image.tag }}"
         imagePullPolicy: {{ .Values.proxy.image.pullPolicy }}
         env:
           - name: CHART_VERSION
@@ -66,7 +68,7 @@ data:
             {{- toYaml . | nindent 12 }}
         {{- end }}
       - name: http-header-inject-debug
-        image: "{{ .Values.proxyInit.image.registry }}/{{ .Values.proxyInit.image.repository }}:{{ .Values.proxyInit.image.tag }}"
+        image: "{{ include "http-header-injector.image.registry" (merge $proxyContainerConfig .) }}/{{ .Values.proxyInit.image.repository }}:{{ .Values.proxyInit.image.tag }}"
         imagePullPolicy: {{ .Values.proxyInit.image.pullPolicy }}
         command: ["/bin/sh", "-c", "while echo \"Running\"; do sleep 1; done"]
         securityContext:

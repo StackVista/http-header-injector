@@ -4,6 +4,17 @@ enabled: true
 # debug -- Enable debugging. This will leave leave artifacts around like the prehook jobs for further inspection
 debug: false
 
+global:
+  # global.imageRegistry -- Globally override the image registry that is used. Can be overridden by specific containers. Defaults to quay.io
+  imageRegistry: null
+  # global.imagePullSecrets -- Globally add image pull secrets that are used.
+  imagePullSecrets: []
+  # global.imagePullCredentials -- Globally define credentials for pulling images.
+  imagePullCredentials: {}
+
+images:
+  pullSecretName:
+
 # proxy -- Proxy being injected into pods for rewriting http headers
 proxy:
   image:
@@ -47,7 +58,7 @@ sidecarInjector:
     # sidecarInjector.image.pullPolicy -- Policy when pulling an image
     pullPolicy: IfNotPresent
     # sidecarInjector.image.tag -- The tag for the docker image
-    tag: sha-2335f2d1
+    tag: sha-9c852245
 
 # certificatePrehook -- Helm prehook to setup/remove a certificate for the sidecarInjector mutationwebhook
 certificatePrehook:

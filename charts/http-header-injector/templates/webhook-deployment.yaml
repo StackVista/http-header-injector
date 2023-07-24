@@ -1,4 +1,5 @@
 {{- if .Values.enabled -}}
+{{- $containerConfig := dict "ContainerConfig" .Values.sidecarInjector -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,6 +21,7 @@ spec:
         revision: "{{ .Release.Revision }}"
       name: "{{ include "http-header-injector.app.name" . }}"
     spec:
+      {{- include "http-header-injector.image.pullSecrets" . | nindent 6 }}
       volumes:
         - name: "{{ include "http-header-injector.webhook-config.name" . }}"
           configMap:
@@ -28,7 +30,7 @@ spec:
           secret:
             secretName: "{{ include "http-header-injector.cert-secret.name" . }}"
       containers:
-        - image: "{{ .Values.sidecarInjector.image.registry }}/{{ .Values.sidecarInjector.image.repository }}:{{ .Values.sidecarInjector.image.tag }}"
+        - image: "{{ include "http-header-injector.image.registry" (merge $containerConfig .) }}/{{ .Values.sidecarInjector.image.repository }}:{{ .Values.sidecarInjector.image.tag }}"
           imagePullPolicy: {{ .Values.sidecarInjector.image.pullPolicy }}
           name: http-header-injector
           volumeMounts:
