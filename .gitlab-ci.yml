@@ -1,0 +1,88 @@
+stages:
+  - test
+  - publish
+
+variables:
+  # Required for helm change detection
+  GIT_DEPTH: 100
+
+build-and-publish-proxy:
+  image:
+    entrypoint:
+      - ""
+    name: gcr.io/kaniko-project/executor:debug
+  # We only enable publishing to the public repo on master, to avoid unwanted version of branches to end up there
+  # Theoretically we could publish branches there aswell, but I feel the risk of accidentally publishing something
+  # which contains secrets for example does not outweigh the convenience.
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - proxy-init/**/*
+      when: always
+    - when: never
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"quay.io\":{\"username\":\"${quay_user}\",\"password\":\"${quay_password}\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context "./proxy/"  --dockerfile ./proxy/Dockerfile --destination quay.io/stackstate/http-header-injector-proxy:sha-${CI_COMMIT_SHORT_SHA}
+  stage: publish
+
+build-and-publish-proxy-init:
+  image:
+    entrypoint:
+      - ""
+    name: gcr.io/kaniko-project/executor:debug
+  # We only enable publishing to the public repo on master, to avoid unwanted version of branches to end up there
+  # Theoretically we could publish branches there aswell, but I feel the risk of accidentally publishing something
+  # which contains secrets for example does not outweigh the convenience.
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - proxy-init/**/*
+      when: always
+    - when: never
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"quay.io\":{\"username\":\"${quay_user}\",\"password\":\"${quay_password}\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context "./proxy-init/"  --dockerfile ./proxy-init/Dockerfile --destination quay.io/stackstate/http-header-injector-proxy-init:sha-${CI_COMMIT_SHORT_SHA}
+  stage: publish
+
+validate-http-header-injector-branch:
+  image: quay.io/helmpack/chart-testing:v3.8.0
+  before_script:
+    - .gitlab/validate_before_script.sh
+  rules:
+    - if: $CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == 'merge_request_event'
+      changes:
+        - charts/http-header-injector/**/*
+      when: always
+    - when: never
+  script:
+    - ct lint --debug --validate-maintainers=false --config ct.yaml
+    - helm template charts/http-header-injector | kubeconform  -
+  stage: test
+
+publish-http-header-injector-branch:
+  image: ${DOCKER_PROXY_URL}/stackstate/sts-ci-images:stackstate-devops-0ccefe18
+  rules:
+    - if: $CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == 'merge_request_event'
+      changes:
+        - charts/http-header-injector/**/*
+      when: always
+    - when: never
+  script:
+    - helm cm-push --force --username ${CHARTMUSEUM_INTERNAL_USERNAME} --password ${CHARTMUSEUM_INTERNAL_PASSWORD} charts/http-header-injector ${CHARTMUSEUM_INTERNAL_URL}
+  stage: publish
+  variables:
+    CHART: charts/http-header-injector
+
+publish-http-header-injector:
+  image: ${DOCKER_PROXY_URL}/stackstate/sts-ci-images:stackstate-devops-0ccefe18
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - charts/http-header-injector/**/*
+      when: always
+    - when: never
+  script:
+    - helm cm-push --username ${CHARTMUSEUM_USERNAME} --password ${CHARTMUSEUM_PASSWORD} charts/http-header-injector ${CHARTMUSEUM_URL}
+  stage: publish
