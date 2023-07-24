@@ -19,7 +19,7 @@ images:
 proxy:
   image:
     # proxy.image.registry -- Registry for the docker image.
-    registry: quay.io
+    registry:
     # proxy.image.repository - Repository for the docker image
     repository: "stackstate/http-header-injector-proxy"
     # proxy.image.pullPolicy -- Policy when pulling an image
@@ -40,7 +40,7 @@ proxy:
 proxyInit:
   image:
     # proxyInit.image.registry -- Registry for the docker image
-    registry: quay.io
+    registry:
     # proxyInit.image.repository - Repository for the docker image
     repository: "stackstate/http-header-injector-proxy-init"
     # proxyInit.image.pullPolicy -- Policy when pulling an image
@@ -52,7 +52,7 @@ proxyInit:
 sidecarInjector:
   image:
     # sidecarInjector.image.registry -- Registry for the docker image.
-    registry: quay.io
+    registry:
     # sidecarInjector.image.repository - Repository for the docker image
     repository: "stackstate/generic-sidecar-injector"
     # sidecarInjector.image.pullPolicy -- Policy when pulling an image
@@ -64,7 +64,7 @@ sidecarInjector:
 certificatePrehook:
   image:
     # certificatePrehook.image.registry -- Registry for the docker image.
-    registry: quay.io
+    registry:
     # certificatePrehook.image.repository - Repository for the docker image.
     repository: stackstate/container-tools
     # certificatePrehook.image.pullPolicy -- Policy when pulling an image
