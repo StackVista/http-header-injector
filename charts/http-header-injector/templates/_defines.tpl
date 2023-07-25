@@ -39,7 +39,7 @@
 {{- end -}}
 
 {{- define "http-header-injector.pull-secret.name" -}}
-{{ .Release.Name }}-pull-secret
+{{ include "http-header-injector.app.name" . }}-pull-secret
 {{- end -}}
 
 {{- define "http-header-injector.image.registry.global" -}}
