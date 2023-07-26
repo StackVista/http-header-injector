@@ -36,6 +36,9 @@ spec:
           volumeMounts:
             - name: http-server-mockserver-config
               mountPath: /config
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532 # uid for nonroot user in distroless base image
       # Helper for debugging
       #        - name: tcpdumper
       #          image: docker.io/dockersec/tcpdump
@@ -156,6 +159,9 @@ spec:
         - name: http-client-success-traffic
           image: tolleiv/rakyll-hey:v0.1.4
           args: [ "-z", "12h", "-c", "5", "-q", "2", "http://http-server:5678/bigSuccess" ]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001 # uid for appuser in rakyll-hey image
 # Debugging containers
 #        - image: curlimages/curl
 #          name: curl

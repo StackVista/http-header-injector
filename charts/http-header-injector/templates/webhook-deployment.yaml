@@ -4,6 +4,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    app.kubernetes.io/component: http-header-injector
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "http-header-injector.app.name" . }}
     app: "{{ include "http-header-injector.app.name" . }}"
   name: "{{ include "http-header-injector.app.name" . }}"
 spec:
@@ -14,6 +17,9 @@ spec:
   template:
     metadata:
       labels:
+        app.kubernetes.io/component: http-header-injector
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ include "http-header-injector.app.name" . }}
         app: "{{ include "http-header-injector.app.name" . }}"
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/webhook-config.yaml") . | sha256sum }}
