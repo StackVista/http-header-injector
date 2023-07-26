@@ -5,6 +5,10 @@
 set -e
 
 installDependencies() {
+  ALPINE_VERSION=$(sed -E 's/^([0-9][\.][0-9]*).*/\1/g' /etc/alpine-release)
+  # shellcheck disable=SC2154
+  echo "https://${artifactory_user}:${artifactory_password}@${artifactory_host}/artifactory/alpine-virtual/v$ALPINE_VERSION/main" > /etc/apk/repositories
+  echo "https://${artifactory_user}:${artifactory_password}@${artifactory_host}/artifactory/alpine-virtual/v$ALPINE_VERSION/community" >> /etc/apk/repositories
   apk -Uuv add bash curl groff less openssl yq
   curl -fSL "https://github.com/yannh/kubeconform/releases/download/v0.4.12/kubeconform-linux-amd64.tar.gz" | tar -C /usr/local/bin -xvz
   chmod +x /usr/local/bin/kubeconform
