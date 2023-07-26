@@ -2,6 +2,10 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: "{{ include "http-header-injector.cert-serviceaccount.name" . }}"
+  labels:
+    app.kubernetes.io/component: http-header-injector-cert-hook
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "http-header-injector.app.name" . }}
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,post-delete,post-upgrade
     "helm.sh/hook-weight": "-3"
