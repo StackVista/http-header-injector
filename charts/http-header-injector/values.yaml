@@ -90,6 +90,4 @@ webhook:
       issuer: ""
       # webhook.tls.certManager.issuerKind -- The issuer kind that is used for the webhook, valid values are "Issuer" or "ClusterIssuer". Only used if you set webhook.tls.mode to "cert-manager".
       issuerKind: "Issuer"
-      # webhook.tls.certManager.issuerNamespace -- The namespace where the issuer is located. Only used if you set webhook.tls.mode to "cert-manager".
-      issuerNamespace: "cert-manager"
 

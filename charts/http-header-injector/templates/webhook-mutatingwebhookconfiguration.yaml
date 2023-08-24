@@ -5,20 +5,17 @@ metadata:
   name: "{{ include "http-header-injector.mutating-webhook.name" . }}"
   namespace: "{{ .Release.Namespace }}"
   labels:
-    {{- if eq .Values.webhook.tls.mode "cert-manager" }}
-    {{- if eq .Values.webhook.tls.certManager.issuerKind "ClusterIssuer" }}
-    cert-manager.io/inject-ca-from: {{ .Values.webhook.tls.certManager.issuer }}
-    {{- else }}
-    cert-manager.io/inject-ca-from: {{ .Values.webhook.tls.certManager.issuerNamespace }}/{{ .Values.webhook.tls.certManager.issuer }}
-    {{- end }}
-    {{- end }}
     app.kubernetes.io/component: http-header-injector
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/name: {{ include "http-header-injector.app.name" . }}
+  annotations:
+    {{- if eq .Values.webhook.tls.mode "cert-manager" }}
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "http-header-injector.webhook-service.name" . }}
+    {{- end }}
 webhooks:
   - clientConfig:
       {{- if eq .Values.webhook.tls.mode "provided" }}
-      caBundle: "{{ .Values.webhook.tls.caBundle }}"
+      caBundle: "{{ .Values.webhook.tls.caBundle | b64enc }}"
       {{- else if eq .Values.webhook.tls.mode "cert-manager" }}
       caBundle: ""
       {{- end }}

@@ -41,12 +41,11 @@ going through the cluster for pods which have the annotation `http-header-inject
 | sidecarInjector.image.pullPolicy | string | `"IfNotPresent"` | Policy when pulling an image |
 | sidecarInjector.image.registry | string | `nil` | Registry for the docker image. |
 | sidecarInjector.image.tag | string | `"sha-9c852245"` | The tag for the docker image |
-| webhook | object | `{"failurePolicy":"Ignore","tls":{"caBundle":"","certManager":{"issuer":"","issuerKind":"Issuer","issuerNamespace":"cert-manager"},"crt":"","key":"","mode":"generated"}}` | MutationWebhook that will be installed to inject a sidecar into pods |
+| webhook | object | `{"failurePolicy":"Ignore","tls":{"caBundle":"","certManager":{"issuer":"","issuerKind":"Issuer"},"crt":"","key":"","mode":"generated"}}` | MutationWebhook that will be installed to inject a sidecar into pods |
 | webhook.failurePolicy | string | `"Ignore"` | How should the webhook fail? Best is to use Ignore, because there is a brief moment at initialization when the hook s there but the service not. Also, putting this to fail can cause the control plane be unresponsive. |
 | webhook.tls.caBundle | string | `""` | The caBundle that is used for the webhook. This is the certificate that is used to sign the webhook. Only used if you set webhook.tls.mode to "provided". |
 | webhook.tls.certManager.issuer | string | `""` | The issuer that is used for the webhook. Only used if you set webhook.tls.mode to "cert-manager". |
 | webhook.tls.certManager.issuerKind | string | `"Issuer"` | The issuer kind that is used for the webhook, valid values are "Issuer" or "ClusterIssuer". Only used if you set webhook.tls.mode to "cert-manager". |
-| webhook.tls.certManager.issuerNamespace | string | `"cert-manager"` | The namespace where the issuer is located. Only used if you set webhook.tls.mode to "cert-manager". |
 | webhook.tls.crt | string | `""` | The certificate that is used for the webhook. Only used if you set webhook.tls.mode to "provided". |
 | webhook.tls.key | string | `""` | The key that is used for the webhook. Only used if you set webhook.tls.mode to "provided". |
 | webhook.tls.mode | string | `"generated"` | The mode for the webhook. Can be "provided", "generated" or "cert-manager". If you want to use cert-manager, you need to install it first. NOTE: If you choose "generated", additional privileges are required to create the certificate and webhook at runtime. |
