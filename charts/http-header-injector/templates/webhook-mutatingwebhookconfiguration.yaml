@@ -1,0 +1,53 @@
+{{- if not (eq .Values.webhook.tls.mode "generated") }}
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: "{{ include "http-header-injector.mutating-webhook.name" . }}"
+  namespace: "{{ .Release.Namespace }}"
+  labels:
+    {{- if eq .Values.webhook.tls.mode "cert-manager" }}
+    {{- if eq .Values.webhook.tls.certManager.issuerKind "ClusterIssuer" }}
+    cert-manager.io/inject-ca-from: {{ .Values.webhook.tls.certManager.issuer }}
+    {{- else }}
+    cert-manager.io/inject-ca-from: {{ .Values.webhook.tls.certManager.issuerNamespace }}/{{ .Values.webhook.tls.certManager.issuer }}
+    {{- end }}
+    {{- end }}
+    app.kubernetes.io/component: http-header-injector
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "http-header-injector.app.name" . }}
+webhooks:
+  - clientConfig:
+      {{- if eq .Values.webhook.tls.mode "provided" }}
+      caBundle: "{{ .Values.webhook.tls.caBundle }}"
+      {{- else if eq .Values.webhook.tls.mode "cert-manager" }}
+      caBundle: ""
+      {{- end }}
+      service:
+        name: "{{ include "http-header-injector.webhook-service.name" . }}"
+        path: /mutate
+        namespace: {{ .Release.Namespace }}
+        port: 8443
+    # Putting failure on ignore, not doing so can crash the entire control plane if something goes wrong with the service.
+    failurePolicy: "{{ .Values.webhook.failurePolicy }}"
+    name: "{{ include "http-header-injector.mutatingwebhookconfiguration.name" . }}"
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - cert-manager
+            - {{ .Release.Namespace }}
+    rules:
+      - apiGroups:
+          - ""
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+        resources:
+          - pods
+    sideEffects: None
+    admissionReviewVersions:
+      - v1
+{{- end }}

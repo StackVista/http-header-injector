@@ -1,3 +1,4 @@
+{{- if eq .Values.webhook.tls.mode "generated" }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -149,3 +150,4 @@ data:
         sideEffects: None
         admissionReviewVersions:
           - v1
+{{- end }}

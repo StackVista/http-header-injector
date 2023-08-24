@@ -76,3 +76,20 @@ certificatePrehook:
 webhook:
   # webhook.failurePolicy -- How should the webhook fail? Best is to use Ignore, because there is a brief moment at initialization when the hook s there but the service not. Also, putting this to fail can cause the control plane be unresponsive.
   failurePolicy: Ignore
+  tls:
+    # webhook.tls.mode -- The mode for the webhook. Can be "provided", "generated" or "cert-manager". If you want to use cert-manager, you need to install it first. NOTE: If you choose "generated", additional privileges are required to create the certificate and webhook at runtime.
+    mode: "generated"
+    # webhook.tls.caBundle -- The caBundle that is used for the webhook. This is the certificate that is used to sign the webhook. Only used if you set webhook.tls.mode to "provided".
+    caBundle: ""
+    # webhook.tls.crt -- The certificate that is used for the webhook. Only used if you set webhook.tls.mode to "provided".
+    crt: ""
+    # webhook.tls.key -- The key that is used for the webhook. Only used if you set webhook.tls.mode to "provided".
+    key: ""
+    certManager:
+      # webhook.tls.certManager.issuer -- The issuer that is used for the webhook. Only used if you set webhook.tls.mode to "cert-manager".
+      issuer: ""
+      # webhook.tls.certManager.issuerKind -- The issuer kind that is used for the webhook, valid values are "Issuer" or "ClusterIssuer". Only used if you set webhook.tls.mode to "cert-manager".
+      issuerKind: "Issuer"
+      # webhook.tls.certManager.issuerNamespace -- The namespace where the issuer is located. Only used if you set webhook.tls.mode to "cert-manager".
+      issuerNamespace: "cert-manager"
+
