@@ -10,13 +10,15 @@ metadata:
     app.kubernetes.io/name: {{ include "http-header-injector.app.name" . }}
   annotations:
     {{- if eq .Values.webhook.tls.mode "cert-manager" }}
-    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "http-header-injector.webhook-service.name" . }}
+    cert-manager.io/inject-ca-from: {{ include "cert-manager.issuer.namespace" . }}/{{ include "http-header-injector.webhook-service.name" . }}
+    {{- else if eq .Values.webhook.tls.mode "secret" }}
+    cert-manager.io/inject-ca-from-secret: {{ .Release.Namespace }}/{{ .Values.webhook.tls.secret.name | required "'webhook.tls.secret.name' is required when webhook.tls.mode is 'secret'" }}
     {{- end }}
 webhooks:
   - clientConfig:
       {{- if eq .Values.webhook.tls.mode "provided" }}
-      caBundle: "{{ .Values.webhook.tls.caBundle | b64enc }}"
-      {{- else if eq .Values.webhook.tls.mode "cert-manager" }}
+      caBundle: "{{ .Values.webhook.tls.provided.caBundle | b64enc }}"
+      {{- else if or (eq .Values.webhook.tls.mode "cert-manager") (eq .Values.webhook.tls.mode "secret") }}
       caBundle: ""
       {{- end }}
       service:

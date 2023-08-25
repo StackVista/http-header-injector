@@ -55,7 +55,6 @@ data:
     {{ else }}
     echo "Chart disabled, not creating secret and webhook"
     {{ end }}
-
   delete-cert.sh: |
     #!/bin/bash
 
