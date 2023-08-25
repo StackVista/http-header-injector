@@ -90,10 +90,9 @@ webhook:
       # webhook.tls.certManager.issuer -- The issuer that is used for the webhook. Only used if you set webhook.tls.mode to "cert-manager".
       issuer: ""
       # webhook.tls.certManager.issuerKind -- The issuer kind that is used for the webhook, valid values are "Issuer" or "ClusterIssuer". Only used if you set webhook.tls.mode to "cert-manager".
-      issuerKind: "Issuer"
+      issuerKind: "ClusterIssuer"
       # webhook.tls.certManager.issuerNamespace -- The namespace the cert-manager issuer is located in. If left empty defaults to the release's namespace that is used for the webhook. Only used if you set webhook.tls.mode to "cert-manager".
       issuerNamespace: ""
     secret:
       # webhook.tls.secret.name -- The name of the secret containing the pre-provisioned certificate data that is used for the webhook. Only used if you set webhook.tls.mode to "secret".
       name: ""
-

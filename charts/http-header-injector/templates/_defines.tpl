@@ -47,7 +47,7 @@
 {{- end -}}
 
 {{/* If the issuer is located in a different namespace, it is possible to set that, else default to the release namespace */}}
-{{- define "cert-manager.issuer.namespace" -}}
+{{- define "cert-manager.certificate.namespace" -}}
 {{ .Values.webhook.tls.certManager.issuerNamespace | default .Release.Namespace }}
 {{- end -}}
 

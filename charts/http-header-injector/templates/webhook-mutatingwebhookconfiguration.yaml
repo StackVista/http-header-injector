@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/name: {{ include "http-header-injector.app.name" . }}
   annotations:
     {{- if eq .Values.webhook.tls.mode "cert-manager" }}
-    cert-manager.io/inject-ca-from: {{ include "cert-manager.issuer.namespace" . }}/{{ include "http-header-injector.webhook-service.name" . }}
+    cert-manager.io/inject-ca-from: {{ include "cert-manager.certificate.namespace" . }}/{{ include "http-header-injector.webhook-service.name" . }}
     {{- else if eq .Values.webhook.tls.mode "secret" }}
     cert-manager.io/inject-ca-from-secret: {{ .Release.Namespace }}/{{ .Values.webhook.tls.secret.name | required "'webhook.tls.secret.name' is required when webhook.tls.mode is 'secret'" }}
     {{- end }}
