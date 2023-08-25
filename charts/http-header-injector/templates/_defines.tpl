@@ -11,7 +11,11 @@
 {{- end -}}
 
 {{- define "http-header-injector.cert-secret.name" -}}
+{{- if eq .Values.webhook.tls.mode "secret" -}}
+{{ .Values.webhook.tls.secret.name }}
+{{- else -}}
 {{ .Release.Name }}-http-injector-cert
+{{- end -}}
 {{- end -}}
 
 {{- define "http-header-injector.cert-clusterrole.name" -}}
@@ -40,6 +44,11 @@
 
 {{- define "http-header-injector.pull-secret.name" -}}
 {{ include "http-header-injector.app.name" . }}-pull-secret
+{{- end -}}
+
+{{/* If the issuer is located in a different namespace, it is possible to set that, else default to the release namespace */}}
+{{- define "cert-manager.certificate.namespace" -}}
+{{ .Values.webhook.tls.certManager.issuerNamespace | default .Release.Namespace }}
 {{- end -}}
 
 {{- define "http-header-injector.image.registry.global" -}}

@@ -1,3 +1,4 @@
+{{- if eq .Values.webhook.tls.mode "generated" }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -54,7 +55,6 @@ data:
     {{ else }}
     echo "Chart disabled, not creating secret and webhook"
     {{ end }}
-
   delete-cert.sh: |
     #!/bin/bash
 
@@ -149,3 +149,4 @@ data:
         sideEffects: None
         admissionReviewVersions:
           - v1
+{{- end }}

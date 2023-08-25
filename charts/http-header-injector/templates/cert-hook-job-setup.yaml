@@ -1,3 +1,4 @@
+{{- if eq .Values.webhook.tls.mode "generated" }}
 {{- $containerConfig := dict "ContainerConfig" .Values.certificatePrehook -}}
 apiVersion: batch/v1
 kind: Job
@@ -39,3 +40,4 @@ spec:
           command: ["/scripts/generate-cert.sh"]
       restartPolicy: Never
   backoffLimit: 0
+{{- end }}
