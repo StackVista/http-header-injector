@@ -70,7 +70,7 @@ certificatePrehook:
     # certificatePrehook.image.pullPolicy -- Policy when pulling an image
     pullPolicy: IfNotPresent
     # certificatePrehook.image.tag -- The tag for the docker image
-    tag: 1.1.8
+    tag: 1.2.0
 
 # webhook -- MutationWebhook that will be installed to inject a sidecar into pods
 webhook:
