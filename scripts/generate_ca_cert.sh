@@ -64,14 +64,15 @@ CRT=$(cat tls.crt | sed -z 's/\n/\\n/g')
 # shellcheck disable=SC2002
 KEY=$(cat tls.key | sed -z 's/\n/\\n/g')
 
-( cat | CA_BUNDLE="$CA_BUNDLE" CRT="$CRT" KEY="$KEY" envsubst > tls_values.conf ) <<VALUES
+( cat | CA_BUNDLE="$CA_BUNDLE" CRT="$CRT" KEY="$KEY" envsubst > tls_values.yaml ) <<VALUES
 httpHeaderInjectorWebhook:
   webhook:
     tls:
       mode: "provided"
-      caBundle: "$CA_BUNDLE"
-      crt: "$CRT"
-      key: "$KEY"
+      provided:
+        caBundle: "$CA_BUNDLE"
+        crt: "$CRT"
+        key: "$KEY"
 VALUES
 
-echo "CA certificate written to tls_values.conf"
+echo "CA certificate written to tls_values.yaml"
